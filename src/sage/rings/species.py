@@ -2317,6 +2317,17 @@ class PolynomialSpeciesElement(CombinatorialFreeModule.Element):
 
         left = self._compose_with_singletons(names, degrees)
         P = left.parent()
+        # The multiplicities may live in a larger ring than the base
+        # ring of ``self`` -- in particular, they may carry undetermined
+        # coefficients introduced by :meth:`define_implicitly`.  Compute
+        # the plethysm over a common ring.
+        from sage.structure.element import get_coercion_model
+
+        cm = get_coercion_model()
+        B = cm.common_parent(P.base_ring(), *[c.parent() for c in multiplicities])
+        if B is not P.base_ring():
+            P = P.change_ring(B)
+            left = P(left)
         right = P._exponential(multiplicities,
                                list(chain.from_iterable(degrees)))
         return left.hadamard_product(right)
@@ -3025,9 +3036,21 @@ class PolynomialSpecies(CombinatorialFreeModule):
             r"""
             Substitute in ``c`` all variables appearing in the
             base ring with their ``k``-th power.
+
+            If the base ring provides a ``_power_sum_plethysm`` method
+            (i.e. it carries undetermined coefficients introduced by
+            :meth:`define_implicitly`), use it: the undetermined
+            coefficients are constants of the `\lambda`-ring and are
+            fixed by `p_k`, while only the base ring monomials are
+            raised to the `k`-th power.
             """
+            if k == 1:
+                return c
+            B = self.base_ring()
+            psp = getattr(B, "_power_sum_plethysm", None)
+            if psp is not None:
+                return psp(c, k)
             if callable(c):
-                B = self.base_ring()
                 return c(*[g ** k for g in B.gens() if g != B.one()])
             return c
 
