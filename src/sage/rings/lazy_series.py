@@ -7005,17 +7005,17 @@ class LazySymmetricFunction(LazyCompletionGradedAlgebraElement):
         if len(args) == 1:
             g = args[0]
             if (isinstance(self._coeff_stream, Stream_exact)
-                and not self._coeff_stream._constant):
+                    and not self._coeff_stream._constant):
 
                 if not isinstance(g, LazySymmetricFunction):
                     f = self.symmetric_function()
                     return f(g, include=include, exclude=exclude)
 
-            if (isinstance(g._coeff_stream, Stream_exact)
-                    and not g._coeff_stream._constant):
-                f = self.symmetric_function()
-                gs = g.symmetric_function()
-                return P(f(gs, include=include, exclude=exclude))
+                if (isinstance(g._coeff_stream, Stream_exact)
+                        and not g._coeff_stream._constant):
+                    f = self.symmetric_function()
+                    gs = g.symmetric_function()
+                    return P(f(gs, include=include, exclude=exclude))
 
             if isinstance(g, LazySymmetricFunction):
                 R = P._laurent_poly_ring
