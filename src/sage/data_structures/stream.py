@@ -105,6 +105,7 @@ from sage.combinat.integer_vector_weighted import iterator_fast as wt_int_vec_it
 from sage.categories.action import Action
 from sage.categories.hopf_algebras_with_basis import HopfAlgebrasWithBasis
 from sage.categories.quotient_fields import QuotientFields
+from sage.categories.tensor import tensor
 from sage.structure.unique_representation import UniqueRepresentation
 from sage.rings.polynomial.infinite_polynomial_ring import InfinitePolynomialRing
 from sage.rings.polynomial.infinite_polynomial_element import InfinitePolynomial
